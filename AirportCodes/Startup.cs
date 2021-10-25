@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Airport.Models;
+using AirportCodes.Models;
 
-namespace Airport
+namespace AirportCodes
 {
     public class Startup
     {
@@ -21,7 +21,7 @@ namespace Airport
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<AirportContext>(opt =>
+            services.AddDbContext<AirportCodesContext>(opt =>
                 opt.UseMySql(Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(Configuration["ConnectionStrings:DefaultConnection"])));
             services.AddControllers();
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Airport.Controllers
+namespace AirportCodes.Controllers
 {
     [ApiController]
     [Route("[controller]")]

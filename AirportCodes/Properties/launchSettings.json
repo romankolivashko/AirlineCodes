@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Airport": {
+    "AirportCodes": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

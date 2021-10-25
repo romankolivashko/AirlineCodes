@@ -5,41 +5,46 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Airport.Models;
+using AirportCodes.Models;
 
-namespace Airport.Controllers
+namespace AirportCodes.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class AirpotController : ControllerBase
+  public class AirportsController : ControllerBase
   {
-    private readonly AirportContext _db;
+    private readonly AirportCodesContext _db;
 
-    public Controller(AirportContext db)
+    public AirportsController(AirportCodesContext db)
     {
       _db = db;
     }
 
     // GET: api/Airports
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Airport>>> Get(string codes, string city, string name)
+    public async Task<ActionResult<IEnumerable<Airport>>> Get(string code, string city, string name, string biggestAirline)
     {
       var query = _db.Airports.AsQueryable();
 
-      if (codes != null)
+      if (code != null)
       {
-        query = query.Where(entry => entry.Codes == codes);
+        query = query.Where(entry => entry.Code == code);
       }
 
       if (city != null)
       {
         query = query.Where(entry => entry.City == city);
-      }    
+      }
 
       if (name != null)
       {
         query = query.Where(entry => entry.Name == name);
-      }      
+      }
+
+      if (biggestAirline !=null)
+      {
+        query = query.Where(entry => entry.BiggestAirline == biggestAirline);
+      }
 
       return await query.ToListAsync();
     }
