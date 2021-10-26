@@ -28,7 +28,7 @@ namespace AirportCodes.Controllers
 
       if (code != null)
       {
-        query = query.Where(entry => entry.Code == code);
+        query = query.Where(entry => entry.Code.Contains(code));
       }
 
       if (city != null)
@@ -38,12 +38,12 @@ namespace AirportCodes.Controllers
 
       if (name != null)
       {
-        query = query.Where(entry => entry.Name == name);
+        query = query.Where(entry => entry.Name.Contains(name));
       }
 
       if (biggestAirline !=null)
       {
-        query = query.Where(entry => entry.BiggestAirline == biggestAirline);
+        query = query.Where(entry => entry.BiggestAirline.Contains(biggestAirline));
       }
 
       return await query.ToListAsync();
