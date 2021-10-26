@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SecuringWebApiUsingApiKey.Attributes;
 using AirportCodes.Models;
 
 namespace AirportCodes.Controllers
 {
   [Route("api/[controller]")]
+  [ApiKey]
   [ApiController]
   public class AirportsController : ControllerBase
   {
     private readonly AirportCodesContext _db;
 
+    
     public AirportsController(AirportCodesContext db)
     {
       _db = db;
