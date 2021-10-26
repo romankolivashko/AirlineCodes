@@ -1,73 +1,114 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using AirportCodes.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportCodes.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using AirportCodes.Models;
+using System.Linq;
 
 namespace AirportCodes.Controllers
 {
-    public class AirportsController : Controller
+  [Route("api/[controller]")]
+  [ApiController]
+  public class UsersController : ControllerBase
+  {
+    private readonly AirportCodesContext _db;
+
+    public UsersController(AirportCodesContext db)
     {
-        private readonly AirportCodesContext _db;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-
-        public AirportsController (UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ToDoListContext db)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _db = db;
-        }
-
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Register (RegisterViewModel model)
-        {
-            var user = new ApplicationUser { UserName = model.Email };
-            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return View();
-            }
-        }
-
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Login(LoginViewModel model)
-        {
-            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> LogOff()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index");
-        }
+      _db = db;
     }
+
+    // GET api/account
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ApplicationUser>>> Get(string userName, string email, string postedRating)
+    {
+      var query = _db.ApplicationUsers.AsQueryable();
+      if (postedRating != null)
+      {
+        query = query.Where(entry => entry.PostedRating.Contains(postedRating));
+      }
+      if (userName != null)
+      {
+        query = query.Where(entry => entry.UserName.Contains(userName));
+      }
+      if (email != null)
+      {
+        query = query.Where(entry => entry.Email.Contains(email));
+      }
+      return await query.ToListAsync();
+    }
+
+    // POST api/ApplicationUsers
+    [HttpPost]
+    public async Task<ActionResult<ApplicationUser>> Post(ApplicationUser applicationUser)
+    {
+      _db.ApplicationUsers.Add(applicationUser);
+      await _db.SaveChangesAsync();
+
+      return CreatedAtAction(nameof(GetUser), new { id = applicationUser.Id }, applicationUser );
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ApplicationUser>> GetUser(int id)
+    {
+      var applicationUser = await _db.ApplicationUsers.FindAsync(id);
+
+      if (applicationUser == null)
+      {
+        return NotFound();
+      }
+
+      return applicationUser;
+    }
+
+    // PATCH: api/Messages/5
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Patch(string id, ApplicationUser applicationUser)
+    {
+      if (id != applicationUser.Id)
+      {
+        return BadRequest();
+      }
+
+      _db.Entry(applicationUser).State = EntityState.Modified;
+
+      try
+      {
+        await _db.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!UserExists(id))
+        {
+          return NotFound();
+        }
+        else
+        {
+          throw;
+        }
+      }
+
+      return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+      var user = await _db.ApplicationUsers.FindAsync(id);
+      if (user == null)
+      {
+        return NotFound();
+      }
+
+      _db.ApplicationUsers.Remove(user);
+      await _db.SaveChangesAsync();
+
+      return NoContent();
+    }
+
+    private bool UserExists(string id)
+    {
+      return _db.ApplicationUsers.Any(e => e.Id == id);
+    }
+  }
 }

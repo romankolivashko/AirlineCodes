@@ -23,5 +23,6 @@ namespace AirportCodes.Models
 
 
         public DbSet<Airport> Airports { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
