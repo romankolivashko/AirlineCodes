@@ -11,7 +11,7 @@ using AirportCodes.Models;
 namespace AirportCodes.Controllers
 {
   [Route("api/[controller]")]
-  [ApiKey]
+  //[ApiKey]
   [ApiController]
   public class AirportsController : ControllerBase
   {
