@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using System.IO;
 using System;
@@ -40,6 +42,12 @@ namespace AirportCodes
                 options.IncludeXmlComments(filePath);
             });
 
+                // services.AddApiVersioning(o => {
+                // o.ReportApiVersions = true;
+                // o.AssumeDefaultVersionWhenUnspecified = true;
+                // o.DefaultApiVersion = new ApiVersion(1, 0);
+                // });
+
             services.AddDbContext<AirportCodesContext>(opt =>
                 opt.UseMySql(Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(Configuration["ConnectionStrings:DefaultConnection"])));
             services.AddControllers();
@@ -69,7 +77,7 @@ namespace AirportCodes
             app.UseSwaggerUI(options => 
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo API");
-                //options.RoutePrefix = "";
+                options.RoutePrefix = "";
             });
         }
     }
