@@ -51,6 +51,8 @@ namespace AirportCodes
                 var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
                 options.IncludeXmlComments(filePath);
+
+                options.ResolveConflictingActions (apiDescriptions => apiDescriptions.First ());
             });
 
             services.AddDbContext<AirportCodesContext>(opt =>
@@ -82,7 +84,7 @@ namespace AirportCodes
             app.UseSwaggerUI(options => 
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo API");
-                //options.RoutePrefix = "";
+                options.RoutePrefix = "";
             });
         }
     }
