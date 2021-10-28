@@ -11,11 +11,6 @@ using AirportCodes.Models;
 
 namespace AirportCodes.Controllers
 {
-<<<<<<< HEAD:AirportCodes/Controllers/AirportsController.cs
-  //[ApiVersion("1.0")]
-  [Route("api/[controller]")]
-=======
->>>>>>> ApiVersioning:AirportCodes/Controllers/AirportsV1Controller.cs
   //[ApiKey]
   [ApiController]
   [ApiVersion("1.0")]
