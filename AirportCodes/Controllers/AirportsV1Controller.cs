@@ -6,20 +6,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecuringWebApiUsingApiKey.Attributes;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using AirportCodes.Models;
 
 namespace AirportCodes.Controllers
 {
+<<<<<<< HEAD:AirportCodes/Controllers/AirportsController.cs
   //[ApiVersion("1.0")]
   [Route("api/[controller]")]
+=======
+>>>>>>> ApiVersioning:AirportCodes/Controllers/AirportsV1Controller.cs
   //[ApiKey]
   [ApiController]
-  public class AirportsController : ControllerBase
+  [ApiVersion("1.0")]
+  //[Route("api/[controller]")]
+  [Route("api/airports")]
+  public class AirportsV1Controller : ControllerBase
   {
     private readonly AirportCodesContext _db;
 
     
-    public AirportsController(AirportCodesContext db)
+    public AirportsV1Controller(AirportCodesContext db)
     {
       _db = db;
     }

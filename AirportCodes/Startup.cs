@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer;
 using System.Reflection;
 using System.IO;
 using System;
@@ -25,7 +28,15 @@ namespace AirportCodes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(); 
+            services.AddApiVersioning(x =>  
+            {  
+                //x.DefaultApiVersion = new ApiVersion(1, 0);  
+                x.AssumeDefaultVersionWhenUnspecified = true;  
+                x.ReportApiVersions = true;  
+                //x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");  
+            });  
+        
 
             services.AddSwaggerGen(options => 
             {
@@ -40,6 +51,8 @@ namespace AirportCodes
                 var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
                 options.IncludeXmlComments(filePath);
+
+                options.ResolveConflictingActions (apiDescriptions => apiDescriptions.First ());
             });
 
                 // services.AddApiVersioning(o => {
@@ -81,4 +94,22 @@ namespace AirportCodes
             });
         }
     }
+
+    // public class VersioningConventions : IApplicationModelConvention
+    // {   
+    //     public void Apply(ApplicationModel application)
+    //         {
+    //             foreach (var controller in application.Controllers)
+    //                 {
+    //                     //Check if route attribute is alredy definedvar hasRoute = controller.Selectors.Any(selector => selector.AttributeRouteModel != null);if (hasRoute){continue;}//Get the version as last part of namespacevar version = controller.ControllerType.Namespace.Split('.').LastOrDefault();controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel()       
+    //                 {  
+    //                 Template = string.Format("api/{0}/{1}", version, controller.ControllerName);  
+    //             };  
+    //         }  
+    //     }  
+    // }  
 }
+
+
+
+

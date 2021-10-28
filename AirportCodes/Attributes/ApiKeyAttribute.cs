@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace SecuringWebApiUsingApiKey.Attributes
 {
